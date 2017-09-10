@@ -1,0 +1,6 @@
+{
+  "parent": "FlexibleMovementTestbed:testBase",
+  "FlexibleMovement": {
+    "movementTypes": ["walking", "leaping"]
+  }
+}

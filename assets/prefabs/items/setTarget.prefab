@@ -1,0 +1,9 @@
+{
+    "parent" : "engine:iconItem",
+    "Item" : {
+        "name" : "Set Target",
+        "icon" : "engine:items#buildBlockJob",
+		"usage" : "ON_BLOCK"
+    },
+    "SetTarget" : {}
+}
