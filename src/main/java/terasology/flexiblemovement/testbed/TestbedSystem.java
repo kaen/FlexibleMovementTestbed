@@ -24,6 +24,8 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.flexiblemovement.FlexibleMovementComponent;
+import org.terasology.logic.characters.CharacterMoveInputEvent;
+import org.terasology.logic.characters.CharacterMovementComponent;
 import org.terasology.logic.inventory.InventoryComponent;
 import org.terasology.logic.inventory.InventoryManager;
 import org.terasology.logic.players.event.OnPlayerSpawnedEvent;
@@ -44,7 +46,7 @@ import org.terasology.world.block.items.BlockItemFactory;
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class TestbedSystem extends BaseComponentSystem {
     private static final String MODULE_NAME = "flexiblemovementtestbed";
-    private static int SURFACE_HEIGHT = 41;
+    private static int SURFACE_HEIGHT = 2;
 
     @In private WorldProvider worldProvider;
     @In private BlockManager blockManager;
@@ -74,10 +76,12 @@ public class TestbedSystem extends BaseComponentSystem {
     }
 
     private void spawnTestCharacters() {
-        Vector3f pos = new Vector3f(0, SURFACE_HEIGHT + 10, 0);
+        Vector3f pos = new Vector3f(0, SURFACE_HEIGHT, 0);
         for (Prefab prefab : prefabManager.listPrefabs(FlexibleMovementComponent.class)) {
             if (prefab.getUrn().getModuleName().toLowerCase().equalsIgnoreCase(MODULE_NAME)) {
-                entityManager.create(prefab, pos);
+                pos.y = prefab.getComponent(CharacterMovementComponent.class).height / 2.0f + SURFACE_HEIGHT - 0.45f;
+                EntityRef entity = entityManager.create(prefab, pos);
+                entity.send(new CharacterMoveInputEvent(0, 0, 0, Vector3f.zero(), false, false, 1));
                 pos.addX(5);
             }
         }

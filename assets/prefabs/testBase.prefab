@@ -38,7 +38,7 @@
     "speedMultiplier" : 0.3,
     "distanceBetweenFootsteps" : 0.2,
     "distanceBetweenSwimStrokes" : 2.5,
-    "height" : 1.6,
+    "height" : 0.9,
     "radius" : 0.3,
     "jumpSpeed" : 12
   },

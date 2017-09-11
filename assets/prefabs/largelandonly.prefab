@@ -8,8 +8,8 @@
     "speedMultiplier" : 0.3,
     "distanceBetweenFootsteps" : 0.2,
     "distanceBetweenSwimStrokes" : 2.5,
-    "height" : 2.8,
-    "radius" : 0.3,
+    "height" : 2.7,
+    "radius" : 1.2,
     "jumpSpeed" : 12
   },
   "skeletalmesh" : {
@@ -18,9 +18,9 @@
     "material" : "deerSkin",
     "animation" : "deerIdle",
     "scale": [
-      1.0,
+      4.0,
       1.7,
-      1.0
+      4.0
     ],
     "loop" : true
   }
