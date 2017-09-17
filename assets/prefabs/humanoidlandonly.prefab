@@ -1,0 +1,22 @@
+{
+  "parent": "FlexibleMovementTestbed:testBase",
+  "FlexibleMovement": {
+    "movementTypes": ["walking", "leaping"]
+  },
+  "CharacterMovement" : {
+    "groundFriction" : 16,
+    "speedMultiplier" : 0.3,
+    "distanceBetweenFootsteps" : 0.2,
+    "distanceBetweenSwimStrokes" : 2.5,
+    "height" : 1.9,
+    "radius" : 0.4,
+    "jumpSpeed" : 12
+  },
+  "skeletalmesh" : {
+    "mesh" : "deer",
+    "heightOffset" : -0.8,
+    "material" : "deerSkin",
+    "animation" : "deerIdle",
+    "loop" : true
+  }
+}
