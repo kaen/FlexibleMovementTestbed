@@ -46,7 +46,7 @@ import org.terasology.world.block.items.BlockItemFactory;
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class TestbedSystem extends BaseComponentSystem {
     private static final String MODULE_NAME = "flexiblemovementtestbed";
-    private static int SURFACE_HEIGHT = 2;
+    private static final int SURFACE_HEIGHT = 41;
 
     @In private WorldProvider worldProvider;
     @In private BlockManager blockManager;
@@ -71,7 +71,7 @@ public class TestbedSystem extends BaseComponentSystem {
         inventoryManager.giveItem(player, player, entityManager.create("flexiblemovementtestbed:setTarget"));
 
         BlockItemFactory blockFactory = new BlockItemFactory(entityManager);
-        EntityRef planks = blockFactory.newInstance(blockManager.getBlockFamily("core:Plank"), 99);
+        EntityRef planks = blockFactory.newInstance(blockManager.getBlockFamily("coreassets:Plank"), 99);
         inventoryManager.giveItem(player, player, planks);
     }
 
@@ -79,7 +79,7 @@ public class TestbedSystem extends BaseComponentSystem {
         Vector3f pos = new Vector3f(0, SURFACE_HEIGHT, 0);
         for (Prefab prefab : prefabManager.listPrefabs(FlexibleMovementComponent.class)) {
             if (prefab.getUrn().getModuleName().toLowerCase().equalsIgnoreCase(MODULE_NAME)) {
-                pos.y = prefab.getComponent(CharacterMovementComponent.class).height / 2.0f + SURFACE_HEIGHT - 0.45f;
+                pos.y = prefab.getComponent(CharacterMovementComponent.class).height / 2.0f + SURFACE_HEIGHT;
                 EntityRef entity = entityManager.create(prefab, pos);
                 entity.send(new CharacterMoveInputEvent(0, 0, 0, Vector3f.zero(), false, false, 1));
                 pos.addX(5);
@@ -105,8 +105,8 @@ public class TestbedSystem extends BaseComponentSystem {
     }
 
     private void loadBlockTypes() {
-        ocean = blockManager.getBlock("core:ocean");
-        dirt = blockManager.getBlock("core:dirt");
+        ocean = blockManager.getBlock("coreassets:ocean");
+        dirt = blockManager.getBlock("coreassets:dirt");
         air = blockManager.getBlock("engine:air");
     }
 

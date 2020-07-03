@@ -17,5 +17,5 @@ package terasology.flexiblemovement.testbed;
 
 import org.terasology.entitySystem.Component;
 
-public class SetTargetComponent implements Component {
+public final class SetTargetComponent implements Component {
 }

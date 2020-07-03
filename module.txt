@@ -6,18 +6,23 @@
     "description" : "",
     "dependencies" : [
         {
-            "id" : "Core",
-            "minVersion" : "1.0.0"
-        },
-        {
             "id" : "FlexibleMovement",
             "minVersion" : "0.1.0"
         },
         {
-            "id" : "CombatSystem",
-            "minVersion" : "0.1.0"
+            "id" : "Inventory",
+            "minVersion" : "1.2.1"
+        },
+        {
+            "id": "CoreWorlds",
+            "minVersion": "1.1.0"
+        },
+        {
+            "id": "CoreRendering",
+            "minVersion": "1.0.0"
         }
     ],
+    "defaultWorldGenerator" : "coreworlds:flat",
     "serverSideOnly" : false,
     "isGameplay" : true
 }
