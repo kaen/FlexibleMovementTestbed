@@ -15,6 +15,8 @@
  */
 package terasology.flexiblemovement.testbed;
 
+import org.joml.Vector3f;
+import org.terasology.math.geom.*;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
@@ -24,19 +26,19 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.flexiblemovement.FlexibleMovementComponent;
+import org.terasology.flexiblemovement.FlexibleMovementHelper;
 import org.terasology.logic.characters.CharacterMoveInputEvent;
 import org.terasology.logic.characters.CharacterMovementComponent;
+import org.terasology.logic.console.commandSystem.annotations.Command;
 import org.terasology.logic.inventory.InventoryComponent;
 import org.terasology.logic.inventory.InventoryManager;
 import org.terasology.logic.players.event.OnPlayerSpawnedEvent;
-import org.terasology.math.Region3i;
-import org.terasology.math.geom.Vector3f;
-import org.terasology.math.geom.Vector3i;
 import org.terasology.registry.In;
 import org.terasology.registry.Share;
 import org.terasology.world.WorldProvider;
 import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockManager;
+import org.terasology.world.block.BlockRegion;
 import org.terasology.world.block.items.BlockItemFactory;
 
 /**
@@ -62,8 +64,7 @@ public class TestbedSystem extends BaseComponentSystem {
     public void postBegin() {
         super.postBegin();
         loadBlockTypes();
-        prepareTestbed();
-        spawnTestCharacters();
+//        spawnTestCharacters();
     }
 
     @ReceiveEvent(components = InventoryComponent.class)
@@ -75,44 +76,50 @@ public class TestbedSystem extends BaseComponentSystem {
         inventoryManager.giveItem(player, player, planks);
     }
 
-    private void spawnTestCharacters() {
-        Vector3f pos = new Vector3f(0, SURFACE_HEIGHT, 0);
-        for (Prefab prefab : prefabManager.listPrefabs(FlexibleMovementComponent.class)) {
-            if (prefab.getUrn().getModuleName().toLowerCase().equalsIgnoreCase(MODULE_NAME)) {
-                pos.y = prefab.getComponent(CharacterMovementComponent.class).height / 2.0f + SURFACE_HEIGHT;
-                EntityRef entity = entityManager.create(prefab, pos);
-                entity.send(new CharacterMoveInputEvent(0, 0, 0, Vector3f.zero(), false, false, 1));
-                pos.addX(5);
-            }
-        }
-    }
-
-    private void prepareTestbed() {
-        paintRegion(air, Region3i.createFromMinMax(
-                new Vector3i(0, SURFACE_HEIGHT, 0),
-                new Vector3i(20,SURFACE_HEIGHT + 20, 20)
-        ));
-
-        paintRegion(ocean, Region3i.createFromMinMax(
-                new Vector3i(10, SURFACE_HEIGHT-5, 10),
-                new Vector3i(20, SURFACE_HEIGHT, 20)
-        ));
-
-        paintRegion(dirt, Region3i.createFromMinMax(
-                new Vector3i(0, SURFACE_HEIGHT, 10),
-                new Vector3i(10, SURFACE_HEIGHT+5, 20)
-        ));
-    }
-
     private void loadBlockTypes() {
         ocean = blockManager.getBlock("coreassets:ocean");
         dirt = blockManager.getBlock("coreassets:dirt");
         air = blockManager.getBlock("engine:air");
     }
 
-    private void paintRegion(Block block, Region3i region) {
-        for (Vector3i pos : region) {
-            worldProvider.setBlock(pos, block);
+
+    @Command
+    private String fmtSpawnTestCharacters() {
+        Vector3f pos = new Vector3f(0, SURFACE_HEIGHT, 0);
+        for (Prefab prefab : prefabManager.listPrefabs(FlexibleMovementComponent.class)) {
+            if (prefab.getUrn().getModuleName().toLowerCase().equalsIgnoreCase(MODULE_NAME)) {
+                pos.y = prefab.getComponent(CharacterMovementComponent.class).height / 2.0f + SURFACE_HEIGHT;
+                EntityRef entity = entityManager.create(prefab, pos);
+//                entity.send(new CharacterMoveInputEvent(0, 0, 0, new Vector3f(0), false, false, 1));
+                pos.add(5, 0, 0);
+            }
         }
+
+        return "Spawned test characters";
+    }
+
+    @Command
+    public String fmtKillAll() {
+        for (EntityRef entity : entityManager.getEntitiesWith(FlexibleMovementComponent.class)) {
+            entity.destroy();
+        }
+
+        return "Killed all entities with FM components";
+    }
+
+    @Command
+    public String fmtBenchmark() {
+        int size = 65;
+
+        fmtKillAll();
+
+        MazeGenerator.generate(worldProvider, dirt, air, SURFACE_HEIGHT, size);
+        for (int z = 0; z < size; z += 1) {
+            EntityRef entity = entityManager.create("flexiblemovementtestbed:landonly", new Vector3f(0, SURFACE_HEIGHT + 1, z));
+            FlexibleMovementComponent flexibleMovementComponent = entity.getComponent(FlexibleMovementComponent.class);
+            flexibleMovementComponent.setPathGoal(FlexibleMovementHelper.posToBlock(new org.terasology.math.geom.Vector3f(size, SURFACE_HEIGHT + 1, z)));
+            flexibleMovementComponent.pathGoalDistance = 1;
+        }
+        return "";
     }
 }
