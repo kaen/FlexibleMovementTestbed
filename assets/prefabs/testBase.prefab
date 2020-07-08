@@ -9,7 +9,6 @@
   "FlexibleMovement": {
     "movementTypes": ["walking", "leaping", "swimming"]
   },
-  "NameTag": { "text": "testcharacter" },
   "Behavior" : {
     "tree" : "flexiblemovement:reliableMoveTo"
   },
@@ -34,13 +33,13 @@
   "Character" : {},
   "AliveCharacter": {},
   "CharacterMovement" : {
-    "groundFriction" : 16,
-    "speedMultiplier" : 0.3,
-    "distanceBetweenFootsteps" : 0.2,
-    "distanceBetweenSwimStrokes" : 2.5,
-    "height" : 0.9,
-    "radius" : 0.3,
-    "jumpSpeed" : 12
+    "groundFriction": 16,
+    "maxGroundSpeed": 3,
+    "distanceBetweenFootsteps": 1.5,
+    "distanceBetweenSwimStrokes": 2.5,
+    "height": 1.8,
+    "radius": 0.3,
+    "jumpSpeed": 12
   },
   "CharacterSound" : {
     "footstepSounds" : ["FootGrass1", "FootGrass2", "FootGrass3", "FootGrass4", "FootGrass5"],

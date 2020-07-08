@@ -16,7 +16,6 @@
 package terasology.flexiblemovement.testbed;
 
 import org.joml.Vector3f;
-import org.terasology.math.geom.*;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
@@ -38,7 +37,6 @@ import org.terasology.registry.Share;
 import org.terasology.world.WorldProvider;
 import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockManager;
-import org.terasology.world.block.BlockRegion;
 import org.terasology.world.block.items.BlockItemFactory;
 
 /**
@@ -57,7 +55,7 @@ public class TestbedSystem extends BaseComponentSystem {
     @In private InventoryManager inventoryManager;
 
     private Block air;
-    private Block dirt;
+    private Block sand;
     private Block ocean;
 
     @Override
@@ -78,7 +76,7 @@ public class TestbedSystem extends BaseComponentSystem {
 
     private void loadBlockTypes() {
         ocean = blockManager.getBlock("coreassets:ocean");
-        dirt = blockManager.getBlock("coreassets:dirt");
+        sand = blockManager.getBlock("coreassets:sand");
         air = blockManager.getBlock("engine:air");
     }
 
@@ -113,12 +111,12 @@ public class TestbedSystem extends BaseComponentSystem {
 
         fmtKillAll();
 
-        MazeGenerator.generate(worldProvider, dirt, air, SURFACE_HEIGHT, size);
+        MazeGenerator.generate(worldProvider, sand, air, SURFACE_HEIGHT, size);
         for (int z = 0; z < size; z += 1) {
             EntityRef entity = entityManager.create("flexiblemovementtestbed:landonly", new Vector3f(0, SURFACE_HEIGHT + 1, z));
             FlexibleMovementComponent flexibleMovementComponent = entity.getComponent(FlexibleMovementComponent.class);
             flexibleMovementComponent.setPathGoal(FlexibleMovementHelper.posToBlock(new org.terasology.math.geom.Vector3f(size, SURFACE_HEIGHT + 1, z)));
-            flexibleMovementComponent.pathGoalDistance = 1;
+            flexibleMovementComponent.pathGoalDistance = 0;
         }
         return "";
     }
