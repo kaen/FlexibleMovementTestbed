@@ -37,7 +37,7 @@ public class SetTargetSystem extends BaseComponentSystem {
         for (EntityRef character : entityManager.getEntitiesWith(FlexibleMovementComponent.class)) {
             FlexibleMovementComponent flexibleMovementComponent = character.getComponent(FlexibleMovementComponent.class);
             flexibleMovementComponent.setPathGoal(FlexibleMovementHelper.posToBlock(event.getHitPosition()));
-            flexibleMovementComponent.pathGoalDistance = 1;
+            flexibleMovementComponent.pathGoalDistance = 0;
         }
     }
 }

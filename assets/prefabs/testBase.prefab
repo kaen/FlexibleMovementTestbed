@@ -37,7 +37,7 @@
     "maxGroundSpeed": 3,
     "distanceBetweenFootsteps": 1.5,
     "distanceBetweenSwimStrokes": 2.5,
-    "height": 1.8,
+    "height": 0.9,
     "radius": 0.3,
     "jumpSpeed": 12
   },

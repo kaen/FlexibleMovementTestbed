@@ -26,18 +26,22 @@ import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.flexiblemovement.FlexibleMovementComponent;
 import org.terasology.flexiblemovement.FlexibleMovementHelper;
-import org.terasology.logic.characters.CharacterMoveInputEvent;
 import org.terasology.logic.characters.CharacterMovementComponent;
 import org.terasology.logic.console.commandSystem.annotations.Command;
 import org.terasology.logic.inventory.InventoryComponent;
 import org.terasology.logic.inventory.InventoryManager;
 import org.terasology.logic.players.event.OnPlayerSpawnedEvent;
+import org.terasology.math.Region3i;
+import org.terasology.math.geom.Vector3i;
 import org.terasology.registry.In;
 import org.terasology.registry.Share;
 import org.terasology.world.WorldProvider;
 import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockManager;
 import org.terasology.world.block.items.BlockItemFactory;
+import terasology.flexiblemovement.testbed.worldgen.TestbedRasterizer;
+
+import static org.terasology.world.chunks.ChunkConstants.CHUNK_SIZE;
 
 /**
  * Sets up the landscape and spawns some characters for testing
@@ -46,7 +50,7 @@ import org.terasology.world.block.items.BlockItemFactory;
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class TestbedSystem extends BaseComponentSystem {
     private static final String MODULE_NAME = "flexiblemovementtestbed";
-    private static final int SURFACE_HEIGHT = 41;
+    private static final int SURFACE_HEIGHT = TestbedRasterizer.WORLD_FLOOR_HEIGHT + 1;
 
     @In private WorldProvider worldProvider;
     @In private BlockManager blockManager;
@@ -54,15 +58,9 @@ public class TestbedSystem extends BaseComponentSystem {
     @In private EntityManager entityManager;
     @In private InventoryManager inventoryManager;
 
-    private Block air;
-    private Block sand;
-    private Block ocean;
-
     @Override
     public void postBegin() {
         super.postBegin();
-        loadBlockTypes();
-//        spawnTestCharacters();
     }
 
     @ReceiveEvent(components = InventoryComponent.class)
@@ -74,15 +72,8 @@ public class TestbedSystem extends BaseComponentSystem {
         inventoryManager.giveItem(player, player, planks);
     }
 
-    private void loadBlockTypes() {
-        ocean = blockManager.getBlock("coreassets:ocean");
-        sand = blockManager.getBlock("coreassets:sand");
-        air = blockManager.getBlock("engine:air");
-    }
-
-
     @Command
-    private String fmtSpawnTestCharacters() {
+    public String fmtSpawnTestCharacters() {
         Vector3f pos = new Vector3f(0, SURFACE_HEIGHT, 0);
         for (Prefab prefab : prefabManager.listPrefabs(FlexibleMovementComponent.class)) {
             if (prefab.getUrn().getModuleName().toLowerCase().equalsIgnoreCase(MODULE_NAME)) {
@@ -107,15 +98,15 @@ public class TestbedSystem extends BaseComponentSystem {
 
     @Command
     public String fmtBenchmark() {
-        int size = 65;
-
         fmtKillAll();
-
-        MazeGenerator.generate(worldProvider, sand, air, SURFACE_HEIGHT, size);
-        for (int z = 0; z < size; z += 1) {
+        int spawnX = 0;
+        int spawnZmax = 0;
+        int spawnZmin = spawnZmax - CHUNK_SIZE.x * 2;
+        int goalX = spawnX - CHUNK_SIZE.x * 2 - 1;
+        for (int z = spawnZmin; z < spawnZmax; z += 2) {
             EntityRef entity = entityManager.create("flexiblemovementtestbed:landonly", new Vector3f(0, SURFACE_HEIGHT + 1, z));
             FlexibleMovementComponent flexibleMovementComponent = entity.getComponent(FlexibleMovementComponent.class);
-            flexibleMovementComponent.setPathGoal(FlexibleMovementHelper.posToBlock(new org.terasology.math.geom.Vector3f(size, SURFACE_HEIGHT + 1, z)));
+            flexibleMovementComponent.setPathGoal(FlexibleMovementHelper.posToBlock(new org.terasology.math.geom.Vector3f(goalX, SURFACE_HEIGHT, z)));
             flexibleMovementComponent.pathGoalDistance = 0;
         }
         return "";

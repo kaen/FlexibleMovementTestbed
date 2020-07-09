@@ -1,6 +1,6 @@
 {
     "id" : "FlexibleMovementTestbed",
-    "version" : "0.1.0-SNAPSHOT",
+    "version" : "0.2.0",
     "author" : "",
     "displayName" : "FlexibleMovementTestbed",
     "description" : "",
@@ -22,7 +22,7 @@
             "minVersion": "1.0.0"
         }
     ],
-    "defaultWorldGenerator" : "coreworlds:flat",
+    "defaultWorldGenerator" : "FlexibleMovementTestbed:TestbedGenerator",
     "serverSideOnly" : false,
     "isGameplay" : true
 }
